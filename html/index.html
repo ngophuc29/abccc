@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.js"></script>
+</head>
+<style>
+    .error {
+        color: red;
+        font-style: italic;
+    }
+
+    .border {
+        border: 1px solid red;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        function ktma() {
+            let ma = $("#txtma").val();
+            let pat = /^(SP)\d{4}(NK|XK)$/
+            if (pat.test(ma)) {
+                $("#erma").html("*");
+                $("#erma").removeClass("error");
+
+                $("#txtma").removeClass("border");
+                return true
+            }
+            else {
+                $("#erma").html("Ma sai");
+                $("#erma").addClass("error");
+                $("#txtma").addClass("border");
+
+                return false
+            }
+        }
+
+
+        function ktten() {
+            let sp = $("#txtten").val();
+            // let patten = /^[A-Z][a-z]+( [A-Z][a-z]+){2,}$/
+            // let patten = /^[A-ZÀ-Ỹ][a-zà-ỹ]*( [A-ZÀ-Ỹ][a-zà-ỹ]*)+$/
+            let patten = /^[A-ZÀ-Ỹ][a-zà-ỹ]*( [A-ZÀ-Ỹ][a-zà-ỹ]*){2,}$/
+
+            if (patten.test(sp)) {
+                $("#erten").html("*");
+                $("#erten").removeClass("error");
+
+                $("#txtten").removeClass("border");
+                return true
+            } else {
+                $("#erten").html("Ten sai");
+                $("#erten").addClass("error");
+                $("#txtten").addClass("border");
+
+                return false
+            }
+        }
+
+        function ktdate() {
+            let ngay = $("#txtdate").val();
+            let newDate = new Date()
+            let inputDate = new Date(ngay)
+            if (inputDate > newDate) {
+                $("#erdate").html("*");
+                $("#erdate").removeClass("error");
+
+                $("#txtdate").removeClass("border");
+                return true
+            } else {
+                $("#erdate").html("Ngay sai");
+                $("#erdate").addClass("error");
+                $("#txtdate").addClass("border");
+
+                return false
+            }
+        }
+
+        function ktsdt() {
+            let sdt = $("#sdt").val();
+            // let patsdt= /^(09|03|08)\d{8}/
+            let patsdt = /^(09|03|08)-\d{4}-\d{4}/
+
+            if (patsdt.test(sdt)) {
+                $("#ersdt").html("*");
+                $("#ersdt").removeClass("error");
+
+                $("#sdt").removeClass("border");
+                return true
+            }
+            else {
+                $("#ersdt").html("Sdt sai dinh dang");
+                $("#ersdt").addClass("error");
+                $("#sdt").addClass("border");
+
+                return false
+            }
+        }
+
+
+        function ktemail() {
+            let email = $("#email").val();
+            // let patemail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.com$/
+            let patemail = /^[A-Za-z0-9._%+-]+@student\.iuh\.edu\.vn$/
+            if (patemail.test(email)) {
+                $("#eremail").html("*");
+                $("#eremail").removeClass("error");
+
+                $("#email").removeClass("border");
+                return true
+
+            } else {
+                $("#eremail").html("email sai dinh dang");
+                $("#eremail").addClass("error");
+                $("#email").addClass("border");
+
+                return false
+            }
+
+        }
+        $("#txtma").blur(function (e) {
+
+            ktma()
+
+        });
+
+        $("#txtten").blur(function (e) {
+            ktten()
+
+        });
+
+        $("#txtdate").blur(function (e) {
+            ktdate()
+
+        });
+
+        $("#sdt").blur(function (e) {
+            ktsdt()
+
+        });
+
+        $("#email").blur(function (e) {
+            ktemail()
+
+        });
+        $("#lstloai").change(function (e) {
+            let thue = $("#lstloai option:selected").val();
+            $("#txtthue").val(thue);
+
+        });
+
+
+        $("input[name='giahh']").change(function (e) {
+            e.preventDefault();
+
+            let tonggia = 0;
+            $.each($('input[name="giahh"]:checked'), function () {
+                tonggia += parseInt($(this).val()); // Chuyển giá trị sang số
+            });
+            $("#giacuoi").val(tonggia);
+        });
+
+
+        $("#btn").click(function (e) {
+            e.preventDefault();
+            let ma = $("#txtma").val();
+            let ten = $("#txtten").val();
+            let ngay = $("#txtdate").val();
+            let loaisp = $("#lstloai option:selected").text();
+            let thue = $("#lstloai option:selected").val();
+            let hinhthuc = $("input[name='hinhthuc']:checked").val();
+            let loaihh = []
+            $.each($("input[name='loaihh']:checked"), function (e) {
+                loaihh.push($(this).val())
+            })
+
+            let sdt = $("#sdt").val();
+            let email = $("#email").val();
+
+            let giacuoi=0
+         
+                 
+                $.each($('input[name="giahh"]:checked'), function () {
+                    giacuoi += parseInt($(this).val()); // Chuyển giá trị sang số
+                });
+               
+
+            if (ktma() && ktten() && ktdate()) {
+                e.preventDefault();
+                let newRow = `
+                            <tr>
+                                <th scope="col">${ma}</th>
+                                <th scope="col">${ten}</th>
+                                <th scope="col">${ngay}</th>
+                                <th scope="col">${loaisp}</th>
+
+                                <th scope="col">${thue}</th>
+
+                                <th scope="col">${hinhthuc}</th>
+
+                                <th scope="col">${loaihh}</th>
+                                <th scope="col">${sdt}</th>
+
+                                <th scope="col">${email}</th>
+
+                                <th scope="col">${giacuoi}</th>
+
+
+                            </tr>
+
+                
+                `
+                $("#tblsp").append(newRow);
+                $('#form')[0].reset()
+                $('#modalId').modal('hide')
+            }
+            else {
+                alert("Vui long nhap dung dinh dang va day du thong tin")
+            }
+
+        });
+    });
+</script>
+
+<body>
+
+    <div class="container">
+        <header class="bg-info " style="height: 100px;">
+            <h1 class="text-center">Header</h1>
+        </header>
+
+        <div class="row bg-success">
+            <ul class="nav ">
+                <li class="nav-item">
+                    <a class="nav-link  " href="#" aria-current="page"> link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <div class="row">
+            <div class="col-2">
+                <ul class="nav flex-column  ">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" aria-current="page">Active link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalId">Dang ky</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <div class="col-10">
+                <div class="table-responsive">
+                    <table class="table table-primary" id="tblsp">
+                        <thead>
+                            <tr>
+                                <th scope="col">Ma sp</th>
+                                <th scope="col">Ten</th>
+                                <th scope="col">Ngay</th>
+                                <th scope="col">Loai san pham</th>
+
+                                <th scope="col">Thue</th>
+
+                                <th scope="col">Hinh thuc</th>
+
+                                <th scope="col">Loai hang hoa</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Modal Body -->
+        <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+        <div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+            role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitleId">
+                            Modal title
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form action="" id="form">
+
+                            <div class="mb-3">
+                                <label for="" class="form-label">Ma</label>
+                                <input type="text" name="" id="txtma" class="form-control" placeholder=""
+                                    aria-describedby="helpId" />
+                                <small id="erma" class="text-muted">*</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="" class="form-label">Ten san pham</label>
+                                <input type="text" name="" id="txtten" class="form-control" placeholder=""
+                                    aria-describedby="helpId" />
+                                <small id="erten" class="text-muted">*</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="" class="form-label">Ngay</label>
+                                <input type="date" name="" id="txtdate" class="form-control" placeholder=""
+                                    aria-describedby="helpId" />
+                                <small id="erdate" class="text-muted">*</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="" class="form-label">Loai san pham</label>
+                                <select class="form-select form-select-lg" name="" id="lstloai">
+
+                                    <option value="5%">Banh ngot</option>
+                                    <option value="10%">Nuoc ngot</option>
+                                    <option value="20%">Bia</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="" class="form-label">Thue</label>
+                                <input type="text" name="" id="txtthue" class="form-control" placeholder=""
+                                    aria-describedby="helpId" disabled />
+                                <small id="helpId" class="text-muted">Help text</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="" class="form-label">Hinh thuc</label> <br />
+                                <input class="form-check-input" type="radio" name="hinhthuc" value="Online"
+                                    id="" />Online
+                                <input class="form-check-input" type="radio" name="hinhthuc" value="Tien mat"
+                                    id="" />Tien mat
+
+
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label for="" class="form-label">Loai hang hoa</label> <br />
+                                <input class="form-check-input" type="checkbox" value="Nhap khau" name="loaihh"
+                                    id="" />Nhap khau
+                                <input class="form-check-input" type="checkbox" value="Xuat khau" name="loaihh"
+                                    id="" />Xuat Khau
+
+
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="" class="form-label">Sdt</label>
+                                <input type="text" name="" id="sdt" class="form-control" placeholder=""
+                                    aria-describedby="helpId" />
+                                <small id="ersdt" class="text-muted">*</small>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label for="" class="form-label">email</label>
+                                <input type="text" name="" id="email" class="form-control" placeholder=""
+                                    aria-describedby="helpId" />
+                                <small id="eremail" class="text-muted">*</small>
+                            </div>
+
+
+
+                            <div class="mb-3">
+                                <label for="" class="form-label">gia hang hoa</label> <br />
+                                <input class="form-check-input" type="checkbox" value="200" name="giahh" id="" />Banh
+                                ngot
+                                <input class="form-check-input" type="checkbox" value="300" name="giahh" id="" />Nuoc
+                                ngot
+                                <input class="form-check-input" type="checkbox" value="400" name="giahh" id="" />Bia
+
+
+
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="" class="form-label">Tong gia hang hoa</label>
+                                <input type="text" name="" id="giacuoi" class="form-control" placeholder=""
+                                    aria-describedby="helpId" disabled />
+
+                            </div>
+
+
+
+                            <button type="submit" class="btn btn-primary" id="btn">
+                                Nhap kho
+                            </button>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</body>
+
+</html>
